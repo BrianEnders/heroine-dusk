@@ -4,6 +4,8 @@
  
 var avatar = new Object();
 avatar.campaign = new Array();
+avatar.flags = new Array();
+avatar.map_changes = new Array();
 var avatar_continue = false;
 
 //---- Public Functions ---------------------------------------------
@@ -13,21 +15,24 @@ function avatar_init() {
   var json_save = getCookie("mazesave");
   if (json_save != null) {
     avatar = JSON.parse(json_save);
-
+	
+	for(var it=0; it<avatar.map_changes.length; it++)
+	{
+		eval(avatar.map_changes[it]);
+	}
+	
     if (avatar.hp > 0) {
-
-      // normal continue
-      mazemap_set(avatar.map_id);
-      avatar_continue = true;
-    }
-    else if (avatar.sleeploc) {
-      avatar_respawn();
-	  avatar_continue = true;
-    }
-    else {
+		// normal continue
+		mazemap_set(avatar.map_id);
+		avatar_continue = true;
+	}else if (avatar.sleeploc) {
+		avatar_respawn();
+		avatar_continue = true;
+    }else {
       avatar_reset();
       mazemap_set(avatar.map_id); 
     }
+	
     return;
   }
 
@@ -57,6 +62,8 @@ function avatar_reset() {
   avatar.spellbook = 0;
   avatar.sleeploc = [0,1,1]; // map_id, x, y
   avatar.campaign = new Array();
+  avatar.flags = new Array();
+  avatar.map_changes = new Array();
 }
 
 /**
