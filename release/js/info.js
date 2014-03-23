@@ -54,14 +54,14 @@ function info_init() {
   info.armors[6] = {name:"Plate Armor",   def:12, gold:20000};
   info.armors[7] = {name:"Wyvern Scale",  def:14, gold:100000};
   
-  info.spells[0] = {name:"No Spell", gold:0};
-  info.spells[1] = {name:"Heal", gold:0};
-  info.spells[2] = {name:"Burn", gold:100};
-  info.spells[3] = {name:"Unlock", gold:500};
-  info.spells[4] = {name:"Light", gold:2500};
-  info.spells[5] = {name:"Freeze", gold:10000};
-  info.spells[6] = {name:"Reflect", gold:50000};
-  
+  info.spells[0] = {name:"No Spell", active:false, type:ACTION_TYPE_NONE, gold:0, map_event:-1, combat_event:-1, result:"", image_id:BUTTON_POS_ACT1};
+  info.spells[1] = {name:"Heal", active:false, type:ACTION_TYPE_SPELL, gold:0, combat_type:[ACTION_TYPE_HEALHP], map_type:[ACTION_TYPE_HEALHP], action_display:"Heal!", sound:SFX_HEAL, image_id:BUTTON_POS_ACT1};
+  info.spells[2] = {name:"Burn", active:false, type:ACTION_TYPE_SPELL, gold:100, combat_type:[ACTION_TYPE_HURTHP], map_type:[ACTION_TYPE_SCRIPT], action_display:"Burn!", action_class:POWER_CLASS_CLASS1, map_event:32, result:"Cleared path!", sound:SFX_FIRE, image_id:BUTTON_POS_ACT2};
+  info.spells[3] = {name:"Unlock", active:false, type:ACTION_TYPE_SPELL, gold:500, combat_type:[ACTION_TYPE_HURTHP], map_type:[ACTION_TYPE_SCRIPT], action_display:"Unlock!", action_class:POWER_CLASS_CLASS3, map_event:34, result:"Unlocked Door!", sound:SFX_UNLOCK, image_id:BUTTON_POS_ACT3};
+
+  info.spells[4] = {name:"Light", active:false,gold:2500, map_event:-1, combat_event:-1, result:""};
+  info.spells[5] = {name:"Freeze", active:false,gold:10000, map_event:-1, combat_event:-1, result:""};
+  info.spells[6] = {name:"Reflect",active:false,gold:50000, map_event:-1, combat_event:-1, result:""};
 } 
 
 /*** Image loading Helpers **********************/
@@ -93,18 +93,24 @@ function info_logic() {
   
   // check power usage
   
-  if (action_checkuse(BUTTON_POS_HEAL) && avatar.mp > 0 && avatar.spellbook >= 1) {
-    power_heal();
+  if (action_checkuse(BUTTON_POS_ACT1) && avatar.mp > 0 && info.spells[1].active) {
+	power_used(1, "map");
+	action.select_pos = BUTTON_POS_ACT1;
+    //power_heal();
 	redraw = true;
   }
 
-  if (action_checkuse(BUTTON_POS_BURN) && avatar.mp > 0 && avatar.spellbook >= 2) {
-    power_map_burn();
+  if (action_checkuse(BUTTON_POS_ACT2) && avatar.mp > 0 && info.spells[2].active) {
+	power_used(2, "map");
+	action.select_pos = BUTTON_POS_ACT2;
+    //power_map_burn();
     redraw = true;
   }
   
-  if (action_checkuse(BUTTON_POS_UNLOCK) && avatar.mp > 0 && avatar.spellbook >= 3) {
-    power_map_unlock();
+  if (action_checkuse(BUTTON_POS_ACT3) && avatar.mp > 0 && info.spells[3].active) {
+	power_used(3, "map");
+	action.select_pos = BUTTON_POS_ACT3;
+    //power_map_unlock();
     redraw = true;
   }
 
@@ -123,9 +129,9 @@ function info_render() {
  
   bitfont_render("INFO", 80, 2, JUSTIFY_CENTER);
   
-  if (avatar.spellbook > 0) {
-    bitfont_render("Spells", 158, 30, JUSTIFY_RIGHT);
-  }
+  //if (avatar.spellbook > 0) {
+    bitfont_render("Actions", 158, 30, JUSTIFY_RIGHT);
+  //}
 
   info_render_equipment();
   info_render_button();
