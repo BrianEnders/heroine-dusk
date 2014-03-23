@@ -16,13 +16,19 @@ dialog.select_pos = BUTTON_POS_OPT2;
 dialog.button_img = new Image();
 dialog.button_img_loaded = false;
 dialog.option = new Array();
+dialog.type = new Array();
+dialog.cost = new Array();
+dialog.value = new Array();
 dialog.message = "";
 dialog.shop_id = 0;
 dialog.items_for_sale = false;
 
 
 for (var i=0; i<3; i++) {
-  dialog.option[i] = new Object();
+	dialog.option[i] = new Object();
+	dialog.type[i] = new Object();
+	dialog.cost[i] = new Object();
+    dialog.value[i] = new Object();
 }
 
 /**** Initialize ***************/
@@ -30,7 +36,7 @@ function dialog_init() {
   dialog.button_img.src = "images/interface/dialog_buttons.png";
   dialog.button_img.onload = function() {dialog_button_onload();};
 
-  shop_set(0);
+  //shop_set(0);
 
 }
 
@@ -47,22 +53,21 @@ function dialog_logic() {
   // check use options
   if (dialog.option[0].button != DIALOG_BUTTON_NONE) {
     if (dialog_checkuse(BUTTON_POS_OPT0)) {
-      shop_act(dialog.shop_id, 0);
+      npc_act(0);
     }
   }
   
   if (dialog.option[1].button != DIALOG_BUTTON_NONE) {
     if (dialog_checkuse(BUTTON_POS_OPT1)) {
-      shop_act(dialog.shop_id, 1);
+      npc_act(1);
     }
   }
 
   if (dialog.option[2].button != DIALOG_BUTTON_NONE) {
     if (dialog_checkuse(BUTTON_POS_OPT2)) {
-      shop_act(dialog.shop_id, 2);
+      npc_act(2);
     }
   }
-
 }
 
 // check an action by the button location
@@ -145,7 +150,7 @@ function dialog_logic_moveselect() {
 
 function dialog_render() {
 
-  tileset_background_render(shop[dialog.shop_id].background);
+  tileset_background_render(npc_background);
 
   bitfont_render(dialog.title, 80, 2, JUSTIFY_CENTER);
 
@@ -197,7 +202,3 @@ function dialog_render_button(button_id, pos) {
     BUTTON_SIZE * SCALE
   );
 }
-
-
-
-
