@@ -2,7 +2,6 @@
  Exploration game state
  
  */
-
 var explore = new Object();
 explore.encounter_chance = 0;
 explore.encounter_increment = .05;
@@ -20,24 +19,25 @@ explore.entered = false;
  * Also most other game states trigger from here
  * and completed states usually return here.
  */
+
 function explore_logic() {
 	explore.message = "";
 
-	avatar_explore();
-	  
 	// Check for starting script when first entering a map.
-	if(explore.entered){
-		if(atlas.maps[mazemap.current_id].start_script) run_script(atlas.maps[mazemap.current_id].start_script);
+	if (explore.entered) {
+		if (atlas.maps[mazemap.current_id].start_script) run_script(atlas.maps[mazemap.current_id].start_script);
 		explore.entered = false;
 	}
-  
+	
+	avatar_explore();
+
 	// Check for event on moved square.
 	if (avatar.moved) {
 		if (mazemap_check_event()) {
 			return;
 		}
-	}  
-    
+	}
+
 	// check random encounter
 	var enemy_options = atlas.maps[mazemap.current_id].enemies.length;
 	if (avatar.moved && enemy_options > 0) {
@@ -55,12 +55,12 @@ function explore_logic() {
 			combat_set_enemy(enemy_id);
 
 			return;
-		}else{
+		} else {
 			explore.encounter_chance += explore.encounter_increment;
 			explore.encounter_chance = Math.min(explore.encounter_chance, explore.encounter_max);
 		}
 	}
-  
+
 	// check opening info screen (keyboard)
 	if (pressing.action && !input_lock.action) {
 		gamestate = STATE_INFO;
@@ -71,7 +71,7 @@ function explore_logic() {
 		sounds_play(SFX_CLICK);
 		return;
 	}
-  
+
 	// check opening info screen (mouse)
 	if (pressing.mouse && !input_lock.mouse && isWithin(mouse_pos, BUTTON_POS_INFO)) {
 		gamestate = STATE_INFO;
@@ -81,7 +81,7 @@ function explore_logic() {
 		info_clear_messages();
 		sounds_play(SFX_CLICK);
 		return;
-	}	
+	}
 }
 
 
@@ -93,28 +93,27 @@ function explore_render() {
 	// HUD elements
 	// direction
 	bitfont_render(avatar.facing, 80, 2, JUSTIFY_CENTER);
-  
+
 	info_render_button();
 
 	if (OPTIONS.minimap) {
 		minimap_render();
 	}
-    
+
 	// if there is treasure to display, put the message higher
 	if (explore.gold_value > 0 || explore.treasure_id > 0) {
-		bitfont_render(explore.message, 80, 70, JUSTIFY_CENTER);  
+		bitfont_render(explore.message, 80, 70, JUSTIFY_CENTER);
+	} else {
+		bitfont_render(explore.message, 80, 100, JUSTIFY_CENTER);
 	}
-	else {
-		bitfont_render(explore.message, 80, 100, JUSTIFY_CENTER);   
-	}
-  
+
 	// if a map event has rewarded gold to the player
 	// display it on the ground here
 	if (explore.gold_value > 0) {
 		treasure_render_gold(explore.gold_value);
-		explore.gold_value = 0;    
+		explore.gold_value = 0;
 	}
-  
+
 	// display treasure on the ground
 	if (explore.treasure_id > 0) {
 		treasure_render_item(explore.treasure_id);

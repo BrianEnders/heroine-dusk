@@ -7,7 +7,6 @@ While Atlas is a static collection, MazeMap can be altered by events.
 
 2013 Clint Bellanger
 */
-
 var mazemap = new Object();
 mazemap.current_id = 0;
 mazemap.current_song = "";
@@ -15,7 +14,7 @@ mazemap.current_song = "";
 //---- Public Functions ---------------------------------------------
 
 function mazemap_init() {
-  mazemap_set(0);
+	mazemap_set(0);
 }
 
 /**
@@ -36,186 +35,184 @@ Drawing is done in this order (a=10, b=11, c=12)
 ...acb...
 .........
 
-*/ 
+*/
+
 function mazemap_render(x, y, facing) {
 
-  if (facing == "north") {
-    // back row
-    mazemap_render_tile(x-2,y-2,0);
-    mazemap_render_tile(x+2,y-2,1);
-    mazemap_render_tile(x-1,y-2,2);
-    mazemap_render_tile(x+1,y-2,3);
-    mazemap_render_tile(x,  y-2,4);
-    // middle row
-    mazemap_render_tile(x-2,y-1,5);
-    mazemap_render_tile(x+2,y-1,6);
-    mazemap_render_tile(x-1,y-1,7);
-    mazemap_render_tile(x+1,y-1,8);
-    mazemap_render_tile(x,  y-1,9);
-    // front row
-    mazemap_render_tile(x-1,y, 10);
-    mazemap_render_tile(x+1,y, 11);
-    mazemap_render_tile(x,  y, 12);
-  }
-  else if (facing == "south") {
-    // back row
-    mazemap_render_tile(x+2,y+2,0);
-    mazemap_render_tile(x-2,y+2,1);
-    mazemap_render_tile(x+1,y+2,2);
-    mazemap_render_tile(x-1,y+2,3);
-    mazemap_render_tile(x,y+2,4);
-    // middle row
-    mazemap_render_tile(x+2,y+1,5);
-    mazemap_render_tile(x-2,y+1,6);
-    mazemap_render_tile(x+1,y+1,7);
-    mazemap_render_tile(x-1,y+1,8);
-    mazemap_render_tile(x,y+1,9);
-    // front row
-    mazemap_render_tile(x+1,y,10);
-    mazemap_render_tile(x-1,y,11);
-    mazemap_render_tile(x,y,12);  
-  }
-  else if (facing == "west") {
-    // back row
-    mazemap_render_tile(x-2,y+2,0);
-    mazemap_render_tile(x-2,y-2,1);
-    mazemap_render_tile(x-2,y+1,2);
-    mazemap_render_tile(x-2,y-1,3);
-    mazemap_render_tile(x-2,y,4);
-    // middle row
-    mazemap_render_tile(x-1,y+2,5);
-    mazemap_render_tile(x-1,y-2,6);
-    mazemap_render_tile(x-1,y+1,7);
-    mazemap_render_tile(x-1,y-1,8);
-    mazemap_render_tile(x-1,y,9);
-    // front row
-    mazemap_render_tile(x,y+1,10);
-    mazemap_render_tile(x,y-1,11);
-    mazemap_render_tile(x,y,12);    
-  }
-  else if (facing == "east") {
-    // back row
-    mazemap_render_tile(x+2,y-2,0);
-    mazemap_render_tile(x+2,y+2,1);
-    mazemap_render_tile(x+2,y-1,2);
-    mazemap_render_tile(x+2,y+1,3);
-    mazemap_render_tile(x+2,y,4);
-    // middle row
-    mazemap_render_tile(x+1,y-2,5);
-    mazemap_render_tile(x+1,y+2,6);
-    mazemap_render_tile(x+1,y-1,7);
-    mazemap_render_tile(x+1,y+1,8);
-    mazemap_render_tile(x+1,y,9);
-    // front row
-    mazemap_render_tile(x,y-1,10);
-    mazemap_render_tile(x,y+1,11);
-    mazemap_render_tile(x,y,12);      
-  }
-  
+	if (facing == "north") {
+		// back row
+		mazemap_render_tile(x - 2, y - 2, 0);
+		mazemap_render_tile(x + 2, y - 2, 1);
+		mazemap_render_tile(x - 1, y - 2, 2);
+		mazemap_render_tile(x + 1, y - 2, 3);
+		mazemap_render_tile(x, y - 2, 4);
+		// middle row
+		mazemap_render_tile(x - 2, y - 1, 5);
+		mazemap_render_tile(x + 2, y - 1, 6);
+		mazemap_render_tile(x - 1, y - 1, 7);
+		mazemap_render_tile(x + 1, y - 1, 8);
+		mazemap_render_tile(x, y - 1, 9);
+		// front row
+		mazemap_render_tile(x - 1, y, 10);
+		mazemap_render_tile(x + 1, y, 11);
+		mazemap_render_tile(x, y, 12);
+	} else if (facing == "south") {
+		// back row
+		mazemap_render_tile(x + 2, y + 2, 0);
+		mazemap_render_tile(x - 2, y + 2, 1);
+		mazemap_render_tile(x + 1, y + 2, 2);
+		mazemap_render_tile(x - 1, y + 2, 3);
+		mazemap_render_tile(x, y + 2, 4);
+		// middle row
+		mazemap_render_tile(x + 2, y + 1, 5);
+		mazemap_render_tile(x - 2, y + 1, 6);
+		mazemap_render_tile(x + 1, y + 1, 7);
+		mazemap_render_tile(x - 1, y + 1, 8);
+		mazemap_render_tile(x, y + 1, 9);
+		// front row
+		mazemap_render_tile(x + 1, y, 10);
+		mazemap_render_tile(x - 1, y, 11);
+		mazemap_render_tile(x, y, 12);
+	} else if (facing == "west") {
+		// back row
+		mazemap_render_tile(x - 2, y + 2, 0);
+		mazemap_render_tile(x - 2, y - 2, 1);
+		mazemap_render_tile(x - 2, y + 1, 2);
+		mazemap_render_tile(x - 2, y - 1, 3);
+		mazemap_render_tile(x - 2, y, 4);
+		// middle row
+		mazemap_render_tile(x - 1, y + 2, 5);
+		mazemap_render_tile(x - 1, y - 2, 6);
+		mazemap_render_tile(x - 1, y + 1, 7);
+		mazemap_render_tile(x - 1, y - 1, 8);
+		mazemap_render_tile(x - 1, y, 9);
+		// front row
+		mazemap_render_tile(x, y + 1, 10);
+		mazemap_render_tile(x, y - 1, 11);
+		mazemap_render_tile(x, y, 12);
+	} else if (facing == "east") {
+		// back row
+		mazemap_render_tile(x + 2, y - 2, 0);
+		mazemap_render_tile(x + 2, y + 2, 1);
+		mazemap_render_tile(x + 2, y - 1, 2);
+		mazemap_render_tile(x + 2, y + 1, 3);
+		mazemap_render_tile(x + 2, y, 4);
+		// middle row
+		mazemap_render_tile(x + 1, y - 2, 5);
+		mazemap_render_tile(x + 1, y + 2, 6);
+		mazemap_render_tile(x + 1, y - 1, 7);
+		mazemap_render_tile(x + 1, y + 1, 8);
+		mazemap_render_tile(x + 1, y, 9);
+		// front row
+		mazemap_render_tile(x, y - 1, 10);
+		mazemap_render_tile(x, y + 1, 11);
+		mazemap_render_tile(x, y, 12);
+	}
+
 }
 
 function mazemap_bounds_check(pos_x, pos_y) {
-  if (pos_x >= 0 && pos_y >= 0 && pos_x < mazemap.width && pos_y < mazemap.height) {
-    return true;  
-  }
-  return false;
+	if (pos_x >= 0 && pos_y >= 0 && pos_x < mazemap.width && pos_y < mazemap.height) {
+		return true;
+	}
+	return false;
 }
 
 // Note: x,y flipped to ease map making
+
 function mazemap_render_tile(pos_x, pos_y, position) {
-  if (mazemap_bounds_check(pos_x, pos_y)) {
-    tileset_render(mazemap.tiles[pos_y][pos_x], position);
-  }
+	if (mazemap_bounds_check(pos_x, pos_y)) {
+		tileset_render(mazemap.tiles[pos_y][pos_x], position);
+	}
 }
 
 // Note: x,y flipped to ease map making
+
 function mazemap_get_tile(pos_x, pos_y) {
-  if (mazemap_bounds_check(pos_x, pos_y)) {
-    return mazemap.tiles[pos_y][pos_x];
-  }
-  else return 0;
+	if (mazemap_bounds_check(pos_x, pos_y)) {
+		return mazemap.tiles[pos_y][pos_x];
+	} else return 0;
 }
 
 function mazemap_get_event(pos_x, pos_y) {
 
-  if (mazemap_bounds_check(pos_x, pos_y)) {
-    return atlas.maps[mazemap.current_id].events[pos_y][pos_x];
-  }
-  else return -1;
+	if (mazemap_bounds_check(pos_x, pos_y)) {
+		return atlas.maps[mazemap.current_id].events[pos_y][pos_x];
+	} else return -1;
 }
 
 // Note: x,y flipped to ease map making
+
 function mazemap_set_tile(pos_x, pos_y, tile_id) {
-  if (mazemap_bounds_check(pos_x, pos_y)) {
-    mazemap.tiles[pos_y][pos_x] = tile_id;
-  }
+	if (mazemap_bounds_check(pos_x, pos_y)) {
+		mazemap.tiles[pos_y][pos_x] = tile_id;
+	}
 }
 
 function mazemap_set(map_id) {
-  mazemap.tiles = atlas.maps[map_id].tiles;
-  mazemap.width = atlas.maps[map_id].width;
-  mazemap.height = atlas.maps[map_id].height;
-  mazemap.current_id = map_id;
+	mazemap.tiles = atlas.maps[map_id].tiles;
+	mazemap.width = atlas.maps[map_id].width;
+	mazemap.height = atlas.maps[map_id].height;
+	mazemap.current_id = map_id;
 
-  // reset encounter chance when moving to a new map
-  explore.encounter_chance = 0;
-  explore.entered = true;
-  // for save game info
-  avatar.map_id = map_id;
+	// reset encounter chance when moving to a new map
+	explore.encounter_chance = 0;
+	explore.entered = true;
+	// for save game info
+	avatar.map_id = map_id;
 
-  if (gamestate != STATE_TITLE) {
-    mazemap_set_music(atlas.maps[map_id].music);
-  }
+	if (gamestate != STATE_TITLE) {
+		mazemap_set_music(atlas.maps[map_id].music);
+	}
 
 }
 
 /**
  * Background music handling
  */
+
 function mazemap_set_music(song_filename) {
-  var audio_node = document.getElementById("bgmusic");
+	var audio_node = document.getElementById("bgmusic");
 
-  if (OPTIONS.music == false) {
-    audio_node.pause();
-    mazemap.current_song = "";
-    return;
-  }
-  
-  // don't reset song if it's already playing
-  if (song_filename == mazemap.current_song) return;
+	if (OPTIONS.music == false) {
+		audio_node.pause();
+		mazemap.current_song = "";
+		return;
+	}
 
-  mazemap.current_song = song_filename;
+	// don't reset song if it's already playing
+	if (song_filename == mazemap.current_song) return;
 
-  var song_path = "music/" + song_filename;
-  
-  // stop the current song
-  audio_node.pause();
+	mazemap.current_song = song_filename;
 
-  // clear the current song
-  audio_node.innerHTML = "";
+	var song_path = "music/" + song_filename;
 
-  // do we need to play ogg or mp3?
-  var newsource = document.createElement('source');
-  if (audio_node.canPlayType('audio/mpeg;')) {
-    newsource.type = "audio/mpeg";
-    newsource.src = song_path + ".mp3";
-  } else {
-    newsource.type = "audio/ogg";
-    newsource.src = song_path + ".ogg";
-  }
-  audio_node.appendChild(newsource);
-  audio_node.load();
-  audio_node.play();
-  
+	// stop the current song
+	audio_node.pause();
+
+	// clear the current song
+	audio_node.innerHTML = "";
+
+	// do we need to play ogg or mp3?
+	var newsource = document.createElement('source');
+	if (audio_node.canPlayType('audio/mpeg;')) {
+		newsource.type = "audio/mpeg";
+		newsource.src = song_path + ".mp3";
+	} else {
+		newsource.type = "audio/ogg";
+		newsource.src = song_path + ".ogg";
+	}
+	audio_node.appendChild(newsource);
+	audio_node.load();
+	audio_node.play();
+
 }
 
-/**
- * Each tile on a map could have an event, check for it.
- */
+
+// Each tile on a map could have an event, check for it.
 function mazemap_check_event() {
-	
-	if(atlas.maps[mazemap.current_id].events[avatar.y][avatar.x] > -1)
-	{
+
+	if (atlas.maps[mazemap.current_id].events[avatar.y][avatar.x] > -1) {
 		event_id = atlas.maps[mazemap.current_id].events[avatar.y][avatar.x];
 		run_script(event_id);
 		return true;
@@ -224,31 +221,28 @@ function mazemap_check_event() {
 }
 
 // The main function to run scripts. It will loop through the event commands.
-function run_script(event_id)
-{
-	for(var i=0; i<eventdata.event[event_id].commands.length; i++)
-	{
+function run_script(event_id) {
+	for (var i = 0; i < eventdata.event[event_id].commands.length; i++) {
 		new_map = eventdata.event[event_id].commands[i];
 		if (new_map.indexOf("flag_check") != -1 || new_map.indexOf("forward_tile_check") != -1) {
-				
+
 			event_test = eval(new_map);
-			if(event_test > -2)
-			{	
-				if(event_test == -1){
-					i=eventdata.event[event_id].commands.length;
-				}else{
-					i=-1;
+			if (event_test > -2) {
+				if (event_test == -1) {
+					i = eventdata.event[event_id].commands.length;
+				} else {
+					i = -1;
 					event_id = event_test;
 				}
 			}
-		}else{
-			if(new_map.indexOf("setup_npc") != -1){
+		} else {
+			if (new_map.indexOf("setup_npc") != -1) {
 				console.log(new_map);
 				reset_script = new_map;
 			}
 			eval(new_map);
 		}
 	}
-	
+
 	redraw = true;
 }

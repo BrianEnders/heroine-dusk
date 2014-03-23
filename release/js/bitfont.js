@@ -9,7 +9,6 @@ Note this class is simplified in several ways:
 - No word wrap
 
  */
-
 var JUSTIFY_LEFT = 0;
 var JUSTIFY_RIGHT = 1;
 var JUSTIFY_CENTER = 2;
@@ -104,117 +103,110 @@ bitfont.glyph_x["}"] = 501; bitfont.glyph_w["}"] = 5;
 bitfont.glyph_x["~"] = 507; bitfont.glyph_w["~"] = 9;
 
 function bitfont_init() {
-  bitfont.img.src = "images/interface/boxy_bold.png";
-  bitfont.img.onload = function() {bitfont_onload();};
-  bitfont.imgred.src = "images/interface/boxy_bold_red.png";
-  bitfont.imgred.onload = function() {bitfont_onloadred();};
+	bitfont.img.src = "images/interface/boxy_bold.png";
+	bitfont.img.onload = function () {
+		bitfont_onload();
+	};
+	bitfont.imgred.src = "images/interface/boxy_bold_red.png";
+	bitfont.imgred.onload = function () {
+		bitfont_onloadred();
+	};
 }
 
 function bitfont_onload() {
-  bitfont.loaded = true;
+	bitfont.loaded = true;
 }
 
 function bitfont_onloadred() {
-  bitfont.loadedred = true;
+	bitfont.loadedred = true;
 }
 
 /**
  * Render text left-justified at x,y
  */
+
 function bitfont_render(text, x, y, justify) {
 
-  if (!bitfont.loaded) return;
-  
-  if(!text) text = "";
+	if (!bitfont.loaded) return;
 
-  var uptext = text.toUpperCase();
-  bitfont_setposition(uptext, x, justify);
+	if (!text) text = "";
 
-  for (var i=0; i < uptext.length; i++) {
-    bitfont_renderglyph(uptext.charAt(i), y);
-  }
+	var uptext = text.toUpperCase();
+	bitfont_setposition(uptext, x, justify);
 
+	for (var i = 0; i < uptext.length; i++) {
+		bitfont_renderglyph(uptext.charAt(i), y);
+	}
 }
 
 /**
  * Sets the starting position for rendering text
  * based on the justify option
  */
+
 function bitfont_setposition(text, x, justify) {
-  if (justify == JUSTIFY_LEFT) {
-    bitfont.cursor_x = x;
-  }
-  else if (justify == JUSTIFY_RIGHT) {
-    bitfont.cursor_x = x - bitfont_calcwidth(text);
-  }
-  else if (justify == JUSTIFY_CENTER) {
-    bitfont.cursor_x = x - (bitfont_calcwidth(text)/2);
-  }
+	if (justify == JUSTIFY_LEFT) {
+		bitfont.cursor_x = x;
+	} else if (justify == JUSTIFY_RIGHT) {
+		bitfont.cursor_x = x - bitfont_calcwidth(text);
+	} else if (justify == JUSTIFY_CENTER) {
+		bitfont.cursor_x = x - (bitfont_calcwidth(text) / 2);
+	}
 }
 
 function bitfont_setcolor(color_id) {
-  bitfont.color = color_id;
+	bitfont.color = color_id;
 }
 
 /**
  * Note: contains logic specific to Heroine Dusk
  */
+
 function bitfont_determinecolor() {
-  if (!init_complete) bitfont_setcolor(FONT_WHITE);
-  else if (!bitfont.loadedred) bitfont_setcolor(FONT_WHITE);
-  else if (avatar_badly_hurt()) bitfont_setcolor(FONT_RED);
-  else bitfont_setcolor(FONT_WHITE);
+	if (!init_complete) bitfont_setcolor(FONT_WHITE);
+	else if (!bitfont.loadedred) bitfont_setcolor(FONT_WHITE);
+	else if (avatar_badly_hurt()) bitfont_setcolor(FONT_RED);
+	else bitfont_setcolor(FONT_WHITE);
 }
 
 /**
  * Calculate the total width of a string
  * Useful for center or right justify
  */
-function bitfont_calcwidth(text) {
-  var total_width = 0;
-  var character;
 
-  for (var i=0; i < text.length; i++) {
-    character = text.charAt(i);
-    if (character == " ") {
-      total_width += bitfont.space;
-    }
-    else {
-      total_width += bitfont.glyph_w[character] + bitfont.kerning;
-    }
-  }
-  return total_width - bitfont.kerning;
+function bitfont_calcwidth(text) {
+	var total_width = 0;
+	var character;
+
+	for (var i = 0; i < text.length; i++) {
+		character = text.charAt(i);
+		if (character == " ") {
+			total_width += bitfont.space;
+		} else {
+			total_width += bitfont.glyph_w[character] + bitfont.kerning;
+		}
+	}
+	return total_width - bitfont.kerning;
 }
 
 /**
  * Internal function
  * Render glyph at cursor_x, y
  */
+
 function bitfont_renderglyph(character, y) {
 
-  var font_color;
-  if (bitfont.color == FONT_WHITE) font_color = bitfont.img;
-  else if (bitfont.color == FONT_RED) font_color = bitfont.imgred;
+	var font_color;
+	if (bitfont.color == FONT_WHITE) font_color = bitfont.img;
+	else if (bitfont.color == FONT_RED) font_color = bitfont.imgred;
 
-  if (character == " ") {
-    bitfont.cursor_x += bitfont.space;
-  }
-  else {
+	if (character == " ") {
+		bitfont.cursor_x += bitfont.space;
+	} else {
 
-    ctx.drawImage(
-      font_color,
-      bitfont.glyph_x[character] * PRESCALE,
-      0,
-      bitfont.glyph_w[character] * PRESCALE,
-      bitfont.height * PRESCALE,
-      bitfont.cursor_x * SCALE,
-      y * SCALE,
-      bitfont.glyph_w[character] * SCALE,
-      bitfont.height * SCALE
-    );
+		ctx.drawImage(
+		font_color, bitfont.glyph_x[character] * PRESCALE, 0, bitfont.glyph_w[character] * PRESCALE, bitfont.height * PRESCALE, bitfont.cursor_x * SCALE, y * SCALE, bitfont.glyph_w[character] * SCALE, bitfont.height * SCALE);
 
-    bitfont.cursor_x += bitfont.glyph_w[character] + bitfont.kerning;
-  }
-
+		bitfont.cursor_x += bitfont.glyph_w[character] + bitfont.kerning;
+	}
 }
-
