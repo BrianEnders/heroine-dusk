@@ -5,6 +5,8 @@
 var TITLE_MENU_MAIN = 0;
 var TITLE_MENU_OPTIONS = 1;
 
+var START_SCRIPT = 44;
+
 var title = new Object();
 
 title.img = new Image();
@@ -149,10 +151,11 @@ function title_render() {
 }
 
 function title_start() {
-  gamestate = STATE_DIALOG;
-  shop_set(8);
-  dialog.option[2].msg1 = "Wake up";
-  mazemap_set_music(atlas.maps[mazemap.current_id].music);
+  gamestate = STATE_EXPLORE;
+  //shop_set(8);
+  //run_script(START_SCRIPT);
+  //dialog.option[2].msg1 = "Wake up";
+  //mazemap_set_music(atlas.maps[mazemap.current_id].music);
   redraw = true;
 }
 

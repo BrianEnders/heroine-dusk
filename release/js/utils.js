@@ -49,6 +49,7 @@ function setNearestNeighbor() {
   ctx.webkitImageSmoothingEnabled = false;
   ctx.mozImageSmoothingEnabled = false;
   ctx.oImageSmoothingEnabled = false;  
+  ctx.msImageSmoothingEnabled = false;
 }
 
 /**

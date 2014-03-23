@@ -48,6 +48,7 @@ function init() {
   ctx.webkitImageSmoothingEnabled = false;
   ctx.mozImageSmoothingEnabled = false;
   ctx.oImageSmoothingEnabled = false;  
+  ctx.msImageSmoothingEnabled = false; 
   
   if (window.addEventListener) {
     window.addEventListener('keydown', handleKeyDown, true);

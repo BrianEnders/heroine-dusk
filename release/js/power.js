@@ -2,10 +2,24 @@
  * Resolve power use
  */
 
-var ENEMY_POWER_ATTACK = 0;
-var ENEMY_POWER_SCORCH = 1;
+var ENEMY_POWER_ATTACK  = 0;
+var ENEMY_POWER_SCORCH  = 1;
 var ENEMY_POWER_HPDRAIN = 2;
 var ENEMY_POWER_MPDRAIN = 3;
+
+var ACTION_TYPE_HEALHP  = 0;
+var ACTION_TYPE_HURTHP  = 1;
+var ACTION_TYPE_HURTMP  = 2;
+var ACTION_TYPE_SCRIPT  = 3;
+
+var POWER_CLASS_NONE    = 0;
+var POWER_CLASS_CLASS1  = 1;
+var POWER_CLASS_CLASS2  = 2;
+var POWER_CLASS_CLASS3  = 3;
+
+var POWER_USE_EXPLORE   = 0;
+var POWER_USE_COMBAT    = 1;
+var POWER_USE_BOTH      = 2;
 
 function power_hero_attack() {
 
@@ -53,6 +67,43 @@ function power_hero_attack() {
 /**
  * Choose a random power from the enemy's available powers
  */
+function power_used(action_id, useage)
+{
+	var target_power = info.spells[action_id];
+	if(useage.indexOf("map") != -1)
+	{
+		for(var i=0;i<target_power.map_type.length;i++){
+			var map_type = target_power.map_type[i];
+			if(map_type == ACTION_TYPE_HEALHP)
+			{
+				power_heal(target_power);
+			}
+			
+			if(map_type == ACTION_TYPE_SCRIPT)
+			{
+				run_script(target_power.map_event);
+			}
+		}
+	}
+	
+	if(useage.indexOf("combat") != -1)
+	{
+		for(var i=0;i<target_power.combat_type.length;i++)
+		{
+			var combat_type = target_power.combat_type[i];
+			if(combat_type == ACTION_TYPE_HEALHP)
+			{
+				power_heal(target_power);
+			}
+			
+			if(combat_type == ACTION_TYPE_HURTHP)
+			{
+				power_hurthp(target_power);
+			}
+		}
+	}
+}
+  
 function power_enemy(enemy_id) {
 
   // override for boss action
@@ -118,7 +169,7 @@ function power_enemy_attack() {
   combat.hero_hurt = true;
 }
  
-function power_heal() {
+function power_heal(target_power) {
 
   if (avatar.mp == 0) return;
   if (avatar.hp == avatar.max_hp) return;
@@ -127,18 +178,59 @@ function power_heal() {
   avatar.hp = avatar.hp + heal_amount;
   if (avatar.hp > avatar.max_hp) avatar.hp = avatar.max_hp;
 
-  sounds_play(SFX_HEAL);
+  sounds_play(target_power.sound);
   avatar.mp--;
   
   if (gamestate == STATE_COMBAT) {
-    combat.offense_action = "Heal!";
-    combat.offense_result = "+" + heal_amount + " HP";  
+    combat.offense_action = target_power.action_display; //"Heal!";
+    combat.offense_result = "+" + heal_amount + " HP"; 
+	used_action = true;	
   }
   else if (gamestate == STATE_INFO) {
-    info.power_action = "Heal!";
+    info.power_action = target_power.action_display; //"Heal!";
     info.power_result = "+" + heal_amount + " HP";
 	avatar_save();
   }
+}
+
+function power_hurthp(target_power) {
+  if (avatar.mp == 0) return;
+  
+  combat.offense_action = target_power.action_display; 
+  
+  var atk_min = (info.weapons[avatar.weapon].atk_min + avatar.bonus_atk);
+  var atk_max = (info.weapons[avatar.weapon].atk_max + avatar.bonus_atk);
+  var attack_damage = Math.round(Math.random() * (atk_max - atk_min)) + atk_min;
+  
+  if(enemy.stats[combat.enemy.type].ineffective.indexOf(target_power.action_class) == -1)
+  {
+	  attack_damage += atk_max;
+	  
+	  if (enemy.stats[combat.enemy.type].weakness.indexOf(target_power.action_class) != -1)
+	  {
+		attack_damage += atk_max;
+	  }else if(enemy.stats[combat.enemy.type].strong.indexOf(target_power.action_class) != -1)
+	  {
+		attack_damage -= atk_max;
+	  }
+	  
+	  avatar.mp--;  
+	  sounds_play(target_power.sound);
+	  
+	  combat.enemy.hp -= attack_damage;
+	  combat.offense_result = attack_damage + " damage";
+	  
+	  combat.enemy_hurt = true;
+	  
+	  if (boss.boneshield_active) {
+		boss.boneshield_active = false;  
+	  }
+  }else{
+		sounds_play(SFX_BLOCKED);
+		combat.offense_result = "Ineffective!"; 
+  }
+  
+  used_action = true;	
 }
 
 function power_burn() {

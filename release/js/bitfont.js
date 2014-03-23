@@ -124,6 +124,8 @@ function bitfont_onloadred() {
 function bitfont_render(text, x, y, justify) {
 
   if (!bitfont.loaded) return;
+  
+  if(!text) text = "";
 
   var uptext = text.toUpperCase();
   bitfont_setposition(uptext, x, justify);

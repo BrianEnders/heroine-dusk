@@ -74,30 +74,22 @@ function minimap_render() {
       else if (target_tile != 0) {
         minimap_render_icon(draw_x, draw_y, MINIMAP_ICON_NONWALKABLE);
       }
+	  
+	  target_event = mazemap_get_event(i,j);
+	  if(target_event > -1)
+	  {
+		if(eventdata.event[target_event].type == EVENT_TYPE_EXIT)
+		{
+			minimap_render_icon(draw_x, draw_y, MINIMAP_ICON_EXIT);
+		}
+	  }
 	}
   }
   
   // render exits
   var exit_x;
   var exit_y;
-  
-  for (var i=0; i<atlas.maps[mazemap.current_id].exits.length; i++) {
-    exit_x = atlas.maps[mazemap.current_id].exits[i].exit_x;
-	exit_y = atlas.maps[mazemap.current_id].exits[i].exit_y;
-	draw_x = exit_x * MINIMAP_ICON_SIZE + left_x;
-	draw_y = exit_y * MINIMAP_ICON_SIZE + top_y;
-	minimap_render_icon(draw_x, draw_y, MINIMAP_ICON_EXIT);
-  }
-  
-  // render shops
-  for (var i=0; i<atlas.maps[mazemap.current_id].shops.length; i++) {
-    exit_x = atlas.maps[mazemap.current_id].shops[i].exit_x;
-	exit_y = atlas.maps[mazemap.current_id].shops[i].exit_y;
-	draw_x = exit_x * MINIMAP_ICON_SIZE + left_x;
-	draw_y = exit_y * MINIMAP_ICON_SIZE + top_y;
-	minimap_render_icon(draw_x, draw_y, MINIMAP_ICON_EXIT);
-  }
-  
+    
   // render avatar cursor
   draw_x = avatar.x * MINIMAP_ICON_SIZE + left_x;
   draw_y = avatar.y * MINIMAP_ICON_SIZE + top_y;

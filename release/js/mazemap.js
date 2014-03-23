@@ -130,11 +130,18 @@ function mazemap_render_tile(pos_x, pos_y, position) {
 
 // Note: x,y flipped to ease map making
 function mazemap_get_tile(pos_x, pos_y) {
-
   if (mazemap_bounds_check(pos_x, pos_y)) {
     return mazemap.tiles[pos_y][pos_x];
   }
   else return 0;
+}
+
+function mazemap_get_event(pos_x, pos_y) {
+
+  if (mazemap_bounds_check(pos_x, pos_y)) {
+    return atlas.maps[mazemap.current_id].events[pos_y][pos_x];
+  }
+  else return -1;
 }
 
 // Note: x,y flipped to ease map making
@@ -150,11 +157,9 @@ function mazemap_set(map_id) {
   mazemap.height = atlas.maps[map_id].height;
   mazemap.current_id = map_id;
 
-  mapscript_exec(map_id);
-
   // reset encounter chance when moving to a new map
   explore.encounter_chance = 0;
-  
+  explore.entered = true;
   // for save game info
   avatar.map_id = map_id;
 
@@ -205,40 +210,45 @@ function mazemap_set_music(song_filename) {
 }
 
 /**
- * Each map in the atlas has a list of exits
- * If the avatar is on an exit tile, move them to the new map
+ * Each tile on a map could have an event, check for it.
  */
-function mazemap_check_exit() {
-  for (var i=0; i<atlas.maps[mazemap.current_id].exits.length; i++) {
-
-    if ((avatar.x == atlas.maps[mazemap.current_id].exits[i].exit_x) &&
-        (avatar.y == atlas.maps[mazemap.current_id].exits[i].exit_y)) {
-        
-      avatar.x = atlas.maps[mazemap.current_id].exits[i].dest_x;
-      avatar.y = atlas.maps[mazemap.current_id].exits[i].dest_y;
-      mazemap_set(atlas.maps[mazemap.current_id].exits[i].dest_map);
-
-      return true;
-    }  
-  }
-  return false;
+function mazemap_check_event() {
+	
+	if(atlas.maps[mazemap.current_id].events[avatar.y][avatar.x] > -1)
+	{
+		event_id = atlas.maps[mazemap.current_id].events[avatar.y][avatar.x];
+		run_script(event_id);
+		return true;
+	}
+	return false;
 }
 
-function mazemap_check_shop() {
-  for (var i=0; i<atlas.maps[mazemap.current_id].shops.length; i++) {
-
-    if ((avatar.x == atlas.maps[mazemap.current_id].shops[i].exit_x) &&
-        (avatar.y == atlas.maps[mazemap.current_id].shops[i].exit_y)) {
-    
-      shop_set(atlas.maps[mazemap.current_id].shops[i].shop_id);
-
-      // put avatar back outside for save purposes
-      avatar.x = atlas.maps[mazemap.current_id].shops[i].dest_x;
-      avatar.y = atlas.maps[mazemap.current_id].shops[i].dest_y;
-
-      return true;
-    }  
-  }
-  return false;
+// The main function to run scripts. It will loop through the event commands.
+function run_script(event_id)
+{
+	for(var i=0; i<eventdata.event[event_id].commands.length; i++)
+	{
+		new_map = eventdata.event[event_id].commands[i];
+		if (new_map.indexOf("flag_check") != -1 || new_map.indexOf("forward_tile_check") != -1) {
+				
+			event_test = eval(new_map);
+			if(event_test > -2)
+			{	
+				if(event_test == -1){
+					i=eventdata.event[event_id].commands.length;
+				}else{
+					i=-1;
+					event_id = event_test;
+				}
+			}
+		}else{
+			if(new_map.indexOf("setup_npc") != -1){
+				console.log(new_map);
+				reset_script = new_map;
+			}
+			eval(new_map);
+		}
+	}
+	
+	redraw = true;
 }
-
