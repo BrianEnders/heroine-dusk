@@ -12,6 +12,8 @@ var COMBAT_PHASE_DEFEAT = 5;
 
 var COMBAT_INTRO_DELAY = 15;
 
+var used_action = false;
+
 // object setup
 var combat = new Object();
 
@@ -47,7 +49,7 @@ function combat_set_enemy(enemy_id) {
   combat.enemy.hp = enemy.stats[enemy_id].hp;
   combat.enemy.category = enemy.stats[enemy_id].category;
   boss_reset();
-  combat.victory_status = "";
+  combat.victory_status = -1;
   sounds_play(SFX_MISS);
 }
 
@@ -101,23 +103,24 @@ function combat_logic_input() {
   combat.hero_hurt = false;
   combat.run_success = false;
 
-  var used_action = false;
+  used_action = false;
   
   if (action_checkuse(BUTTON_POS_ATTACK)) {
     power_hero_attack();
 	used_action = true;
   }
-  else if (action_checkuse(BUTTON_POS_HEAL) && avatar.mp > 0 && avatar.spellbook >= 1 && avatar.hp < avatar.max_hp) {
-    power_heal();
-	used_action = true;
+  else if (action_checkuse(BUTTON_POS_ACT1) && avatar.mp > 0 && info.spells[1].active) {
+    power_used(1, "combat");
   }
-  else if (action_checkuse(BUTTON_POS_BURN) && avatar.mp > 0 && avatar.spellbook >= 2) {
-    power_burn();
-	used_action = true;
+  else if (action_checkuse(BUTTON_POS_ACT2) && avatar.mp > 0 && info.spells[2].active) {
+	power_used(2, "combat");
+    //power_burn();
+	//used_action = true;
   }
-  else if (action_checkuse(BUTTON_POS_UNLOCK) && avatar.mp > 0 && avatar.spellbook >= 3 && combat.enemy.category == ENEMY_CATEGORY_AUTOMATON) {
-    power_unlock();
-    used_action = true;
+  else if (action_checkuse(BUTTON_POS_ACT3) && avatar.mp > 0 && info.spells[3].active) {
+    power_used(3, "combat");
+	//power_unlock();
+    //used_action = true;
   }
   else if (action_checkuse(BUTTON_POS_RUN)) {
     power_run();
@@ -137,7 +140,6 @@ function combat_logic_input() {
   }
 
   action_logic();
-
 }
 
 function combat_logic_offense() {
@@ -268,8 +270,8 @@ function combat_determine_reward() {
   combat.gold_treasure = gold_reward;
   
   // if killed a named creature, remember
-  if (combat.victory_status != "") {
-    avatar.campaign.push(combat.victory_status);  
+  if (combat.victory_status > -1) {
+	run_script(combat.victory_status); 
   }
   
   avatar_save();
